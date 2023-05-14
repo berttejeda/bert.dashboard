@@ -1,0 +1,17 @@
+dashboard:
+  cards:
+    recent_activity:
+      title: "Recent Activity"
+      type: message.container
+      data:
+        exec:
+          command: |-
+            ecli message.container.init
+          args:
+            - testing
+
+types:
+  - message.container
+  - chart.bar
+  - chart.line
+  - chart.area

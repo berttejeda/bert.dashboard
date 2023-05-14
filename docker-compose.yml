@@ -1,0 +1,31 @@
+version: "3.5"
+
+services:
+
+  btdashboard:
+    image: berttejeda/btdashboard
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    container_name: btdashboard
+    command: 
+      - -aio
+      - -f /app/etc/lessons.yaml
+      - -fd /app/etc/dashboard.yaml
+      - -fs /app/etc/sidebar.yaml
+    hostname: bert.dashboard
+    volumes:
+      - ./etc:/app/etc
+      - ./docker/nginx.conf:/etc/nginx/conf.d/app.conf
+    ports:
+      - 10000:10000
+      - 10001:10001
+      - 10002:10002
+    tty: true 
+    environment:
+      TZ: "US/Eastern"
+
+networks: 
+  default: 
+    name: btdashboard      

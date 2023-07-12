@@ -1,4 +1,6 @@
-FROM tecknicos/devops-cli:1.0.1
+ARG DEVOPS_CLI_IMAGE=berttejeda/devops-cli
+ARG DEVOPS_CLI_IMAGE_VERSION=1.0.0
+FROM $DEVOPS_CLI_IMAGE:$DEVOPS_CLI_IMAGE_VERSION
 
 RUN sudo apt update 
 

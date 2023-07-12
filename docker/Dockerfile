@@ -22,7 +22,7 @@ RUN mkdir etc
 
 ADD etc/ etc/
 
-ADD entrypoint.sh /usr/local/bin
+ADD docker/entrypoint.sh /usr/local/bin
 
 RUN sudo chmod +x /usr/local/bin/entrypoint.sh
 

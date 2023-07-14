@@ -10,8 +10,6 @@ import { Provider } from 'react-redux'
 
 import store from 'store'
 
-import history from 'history';
-
 // Lesson App
 import App from 'App'
 
@@ -20,13 +18,11 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-    <React.StrictMode>
     <Provider store={store}>
-      <Router history={history}>
+      <Router>
         <App />
       </Router>
     </Provider>
-    </React.StrictMode>
 );
 
 if(module.hot){

@@ -3,7 +3,7 @@ import React,{useEffect, useState} from 'react';
 import './Footer.scss'
 
 // WebTerminal Component
-import XTerm from "../XTerm/XTerm";
+import XTerm from "components/XTerm";
 import {FormControl, InputGroup} from "react-bootstrap";
 
 export default function Footer(lesson, {children}) {

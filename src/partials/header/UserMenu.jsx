@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Transition from '../../utils/Transition';
-
-import UserAvatar from '../../images/user-avatar-32.png';
+import Transition from 'utils/Transition';
+import { useSelector } from "react-redux";
+import UserAvatar from 'images/user-avatar-32.png';
 
 function UserMenu() {
 
@@ -10,6 +10,9 @@ function UserMenu() {
 
   const trigger = useRef(null);
   const dropdown = useRef(null);
+
+  const appData = useSelector(state => state.appData)
+  const currentUser = useSelector(state => state.currentUser)
 
   // close on click outside
   useEffect(() => {
@@ -42,7 +45,7 @@ function UserMenu() {
       >
         <img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />
         <div className="flex items-center truncate">
-          <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">{process.env['SITE_ID'] || process.env.REACT_DEFAULT_SITE_ID}</span>
+          <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">{appData.data?.settings?.id}</span>
           <svg className="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
             <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
           </svg>
@@ -65,8 +68,7 @@ function UserMenu() {
           onBlur={() => setDropdownOpen(false)}
         >
           <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200">
-            <div className="font-medium text-slate-800">{process.env['SITE_ID'] || process.env.REACT_DEFAULT_SITE_ID}</div>
-            <div className="text-xs text-slate-500 italic">{process.env['SITE_USER'] || process.env.REACT_DEFAULT_SITE_USER}</div>
+            <div className="text-xs text-slate-500 italic">{currentUser.user?.name}</div>
           </div>
           <ul>
             <li>

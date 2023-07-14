@@ -15,6 +15,8 @@ Components:
 from btdashboard.args import parse_args
 from btdashboard.config import AppConfig
 from btdashboard.defaults import default_app_port, \
+default_app_config, \
+default_app_config_file, \
 default_app_host_address, \
 default_footer_websocket_address, \
 default_webterminal_listen_host , \
@@ -43,17 +45,26 @@ mimetypes.add_type('text/css', '.css')
 
 # Read command-line args
 args = parse_args()
+
 # Initialize logging facility
 logger_obj = Logger(logfile_path=args.logfile_path, logfile_write_mode=args.logfile_write_mode)
 logger = logger_obj.init_logger('app')
 
 verify_tls = args.no_verify_tls or default_verify_tls
 
-# Initialize Config Readers
-app_config = AppConfig().initialize(
-  args=vars(args),
-  verify_tls=verify_tls
-)
+# Initialize App Configuration
+app_config_file = args.app_config_file or default_app_config_file
+if app_config_file:
+  app_config = AppConfig().initialize(
+      args=vars(args),
+      config_file=app_config_file,
+      verify_tls=verify_tls
+      )
+else:
+  app_config = default_app_config
+
+# Initialize Lessons
+lessons = Lessons(args=args)
 
 if args.api_only:
     static_assets_folder = None
@@ -61,23 +72,15 @@ else:
     static_assets_folder = args.static_assets_folder or get_static_folder()
     logger.info(f'Static assets folder is {static_assets_folder}')
 
-# Initialize Topics Loader
+# Initialize Topics
 topics = Topics(
-  settings=app_config,
+  settings=lessons.settings,
   args=args)
 
-# Initialize Lesson Loader
-lessons = Lessons(
-    settings=app_config,
-    args=args, 
-    no_render_markdown=args.no_render_markdown,
-    verify_tls=verify_tls
-    )
-
-# Initialize Dashboard Settings
+# Initialize Dashboard
 dashboard = Dashboard(args=args)
 
-# Initialize Sidebar Settings
+# Initialize Sidebar
 sidebar = SideBar(args=args)
 
 # Initialize Websocket handler
@@ -109,7 +112,7 @@ def start_api():
   
   This function defines the API routes and starts the API Process.
 
-  """  
+  """
 
   @app.route('/', defaults={'path': ''})
   @app.route('/<path:path>')
@@ -190,6 +193,12 @@ def start_api():
     available_topics = topics.get()
     return available_topics
 
+  @app.route('/api/getAppData')
+  def get_app_id():
+    app_data = app_config
+    logger.debug(f'app_data is {app_data}')
+    return {'settings': app_data}
+
   @app.route('/api/ping')
   def ping():
     return {'message': "pong"}
@@ -203,10 +212,7 @@ def start_api():
   if 'WERKZEUG_RUN_MAIN' not in os.environ and not all([args.api_only or args.no_browser]):
     threading.Timer(args.open_browser_delay, lambda: webbrowser.open(local_url)).start()
 
-  if args.all_in_one:
-    app.run(host=app_host_address, port=app_port)
-  else:
-    app.run(use_reloader=True, host=app_host_address, port=app_port)
+  app.run(host=app_host_address, port=app_port)
 
   logger.info("Stop API")
 

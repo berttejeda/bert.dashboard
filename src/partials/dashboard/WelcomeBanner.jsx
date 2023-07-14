@@ -1,9 +1,14 @@
-import React from 'react';
+import React,{useEffect} from 'react';
+
+import { useSelector } from "react-redux";
 
 function WelcomeBanner() {
 
   let today = new Date()
   let curHr = today.getHours()
+
+  const currentUser = useSelector(state => state.currentUser)
+  const dashboardData = useSelector(state => state.dashboardData)
 
   if (curHr < 12) {
     let greeting = 'Good morning'
@@ -60,8 +65,8 @@ function WelcomeBanner() {
 
       {/* Content */}
       <div className="relative">
-        <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-1">{greeting}, {process.env['SITE_USER'] || process.env.REACT_DEFAULT_SITE_USER} 👋</h1>
-        <p>Here is what's happening with your projects today:</p>
+        <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-1">{greeting}, {currentUser.user?.name} 👋</h1>
+        <p>{dashboardData?.data?.dashboard?.greeting}</p>
       </div>
 
     </div>

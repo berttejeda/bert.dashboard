@@ -1,0 +1,13 @@
+---
+id: btDashboard
+user: ${USER:anonymous}
+terminals:
+  default:
+    address: ws://127.0.0.1:10001
+  footer:
+    address: ws://127.0.0.1:10001
+  rightpane:
+    address: ws://127.0.0.1:10001
+external_configs:
+- name: bert.lessons
+  uri: https://raw.githubusercontent.com/berttejeda/bert.lessons/main/lessons.yaml

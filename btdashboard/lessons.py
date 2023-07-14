@@ -1,6 +1,8 @@
 import base64
 import os
 import markdown
+from btdashboard.config import AppConfig
+from btdashboard.defaults import default_verify_tls, default_lessons_config_file
 from btdashboard.extensions import NewTabExtension
 from jinja2 import Template
 from btdashboard.logger import Logger
@@ -11,16 +13,24 @@ logger = Logger().init_logger(__name__)
 
 class Lessons:
 
-  def __init__(self, args, settings, **kwargs):
-    self.args = args
-    self.settings = settings
-    verify_tls = kwargs.get('verify_tls')
+  def __init__(self, **kwargs):
+
+
+    args = kwargs['args']
+    no_render_markdown = args.no_render_markdown
+    verify_tls = args.no_verify_tls or default_verify_tls
+    lessons_config = AppConfig().initialize(
+    args=vars(args),
+    config_file=args.lessons_config_file or default_lessons_config_file,
+    verify_tls=verify_tls
+    )
+    self.settings = lessons_config
     fail_on_errors = kwargs.get('fail_on_errors', True)
     self.webadapter = WebAdapter(fail_on_errors=fail_on_errors, verify_tls=verify_tls)
     self.global_username = os.environ.get(
-      'GLOBAL_USERNAME') or self.args.username  # or self.config_util.get(self.settings,'auth.global.username')
+      'GLOBAL_USERNAME') or args.username  # or self.config_util.get(self.settings,'auth.global.username')
     self.global_password = os.environ.get(
-      'GLOBAL_PASSWORD') or self.args.password  # or self.config_util.get(self.settings,'auth.global.password')
+      'GLOBAL_PASSWORD') or args.password  # or self.config_util.get(self.settings,'auth.global.password')
 
   def encode_lesson(self, rendered_lesson):
       rendered_lesson_bytes = rendered_lesson.encode("utf-8")

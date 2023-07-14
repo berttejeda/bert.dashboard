@@ -1,5 +1,4 @@
-from btdashboard.defaults import default_settings
-from btdashboard.defaults import default_config_file_name
+# from btdashboard.defaults import default_settings
 from btdashboard.logger import Logger
 import os
 from btconfig import Config
@@ -22,18 +21,19 @@ class AppConfig():
     }  
 
     config_file_uri = kwargs.get('config_file') or \
-                      args.get('config_file') or \
-                      default_config_file_name
-    logger.info(f"Config file URI is {config_file_uri}")
-    # Initialize App Config
-    config = Config(
-        config_file_uri=config_file_uri,
-        default_value=default_settings,
-        initial_data=initial_data,
-        args=args,
-        verify_tls=verify_tls
-    )
+                      args.get('config_file')
+    if config_file_uri:
+      logger.info(f"Config file URI is {config_file_uri}")
+      # Initialize App Config
+      config = Config(
+          config_file_uri=config_file_uri,
+          initial_data=initial_data,
+          args=args,
+          verify_tls=verify_tls
+      )
 
-    settings = config.read()
+      settings = config.read()
 
-    return settings
+      return settings
+    else:
+      return {}

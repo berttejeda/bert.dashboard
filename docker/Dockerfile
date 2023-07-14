@@ -1,5 +1,25 @@
 ARG DEVOPS_CLI_IMAGE=berttejeda/devops-cli
 ARG DEVOPS_CLI_IMAGE_VERSION=1.0.0
+
+FROM node:16.5.0 AS assets
+
+WORKDIR /setup
+
+COPY --chown=node . .
+
+ENV REACT_APP_VERSION=0.1
+ENV REACT_DEFAULT_SITE_ID=bert.self
+ENV REACT_DEFAULT_SITE_USER=Anonymous
+ENV REACT_APP_API_HOST=http://127.0.0.1:10000
+ENV REACT_APP_API_URI_GET_FOOTER=${REACT_APP_API_HOST}/api/getFooterWebSocketAddress
+ENV REACT_APP_API_URI_GET_TOPICS=${REACT_APP_API_HOST}/api/getTopics
+ENV REACT_APP_API_URI_GET_RIGHTPANE=${REACT_APP_API_HOST}/api/getRightPaneWebSocketAddress
+ENV REACT_APP_API_URI_LOAD_LESSON=${REACT_APP_API_HOST}/api/loadLesson
+ENV REACT_APP_API_URI_PING=${REACT_APP_API_HOST}/api/ping
+
+RUN yarn install --network-timeout 1000000000
+RUN yarn build
+
 FROM $DEVOPS_CLI_IMAGE:$DEVOPS_CLI_IMAGE_VERSION
 
 RUN sudo apt update 
@@ -11,6 +31,8 @@ RUN sudo mkdir -p /var/log/nginx
 WORKDIR /setup
 
 ADD . .
+
+COPY --from=assets /setup/dashboard.gui ./
 
 RUN sudo pip install .
 

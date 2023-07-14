@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { hashString } from 'utils/Utils'
 
 export default function DashboardCard({ 
     cardData,
     cardTitle
   }
   ) {
+
+  let counter = 0
+
 
   return (
 
@@ -13,22 +17,25 @@ export default function DashboardCard({
         <h2 className="font-semibold text-slate-800">{cardTitle}</h2>
       </header>
       <div className="p-3">
-      {
+      {        
         Object.keys(cardData).length > 0 && !cardData?.error
         ?
           Object.entries(cardData).map((messageGroupObj)=> {
             {let messageGroupID = messageGroupObj[0]}
+            {counter++}
             return (
-                <div key={messageGroupID}>
+                <div key={`div-${messageGroupID}-${counter}`}>
                   <header className="text-xs uppercase text-slate-400 bg-slate-50 rounded-sm font-semibold p-2">
                   {messageGroupID}
                   </header>
-                  <ul className="my-1">
+                  <ul key={`ul-${messageGroupID}`} className="my-1">
                   {
                   Object.entries(messageGroupObj[1]).map((messageObj)=> {
                       {let message = messageObj[1]}
-                      return <li className="flex px-2">
-                      <div className="self-center font-medium text-slate-800" key={message}>{message}</div>
+                      {let messageHash = hashString(message)}
+                      {counter++}
+                      return <li key={`li-${messageHash}-${counter}`} className="flex px-2">
+                      <div className="self-center font-medium text-slate-800" key={`div-${messageHash}-${counter}`}>{message}</div>
                       </li>
                   })
                   }

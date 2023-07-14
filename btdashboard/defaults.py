@@ -23,11 +23,17 @@ app_name = "Bert's Dashboard"
 gui_dirname = 'dashboard.gui'
 default_app_port = 10000
 default_open_browser_delay = 1.25
-default_config_file_name = 'lessons.yaml'
 default_app_host_address = '0.0.0.0'
+default_app_config_file = 'etc/app.yaml'
+default_lessons_config_file = 'etc/lessons.yaml'
 default_dashboard_config_file = 'etc/dashboard.yaml'
 default_sidebar_config_file = 'etc/sidebar.yaml'
-default_settings = {
+default_app_id = 'btDashboard'
+default_app_user = os.environ.get('USER') or os.environ.get('USERNAME') or 'Anonymous'
+
+default_app_config = {
+  "app_id": default_app_id,
+  "app_user": default_app_user,
   "terminals": {
     "default": {
       "address": default_websocket_address

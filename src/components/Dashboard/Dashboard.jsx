@@ -20,20 +20,31 @@ import DashboardCard12 from '../../partials/dashboard/DashboardCard12';
 import DashboardCard13 from '../../partials/dashboard/DashboardCard13';
 import { hashString } from 'utils/Utils'
 
-export default function Dashboard({
-  }
-  ) {
+import rootActions from 'actions'
+
+import { useDispatch } from "react-redux";
+
+export default function Dashboard({}) {
 
   const [dashboardSettings, setDashboardSettings] = useState({});
   const [dashboardCards, setDashboardCards] = useState({});
+  const dispatch = useDispatch()
 
   useEffect(() => {
-
+    
+    
     console.log('Retrieving Dashboard Settings')
 
     try {
       fetch(`${process.env.REACT_APP_API_HOST}/api/getDashboardSettings`).then(res => res.json()).then(obj => {
         setDashboardSettings(obj.settings);
+        const dashboardData = {
+            ...obj.settings
+        };           
+        // The only way to mutate the internal state is to dispatch an action.
+        // The actions can be serialized, logged or stored and later replayed.    
+        // console.log(dashboardSettings)
+        dispatch(rootActions.dashboardActions.setDashboardData(dashboardData))
       });
     } catch (e) {
       console.log(e)
@@ -63,7 +74,7 @@ export default function Dashboard({
         <WelcomeBanner />
         {/* Cards */}
         <div className="grid grid-cols-12 gap-6">
-        <DashboardCard01 />
+        <DashboardCard01/>
         {
           Object.keys(dashboardCards).length > 0 
           ? 

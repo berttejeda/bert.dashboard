@@ -81,8 +81,9 @@ class Lessons:
     lesson_slug_parts = lesson_slug.split('/')
     topic_name = lesson_slug_parts[0]
     lesson_name = lesson_slug_parts[-1]
-    derived_lesson_url = [l for l in self.settings.topics[topic_name].lessons if l.get('name') == lesson_name]
-    lesson_url = os.environ.get('lesson_url') or derived_lesson_url[0]['url']
+    derived_lesson_obj = [l for l in self.settings.topics[topic_name].lessons if l.get('name') == lesson_name]
+    lesson_url = os.environ.get('lesson_url') or derived_lesson_obj[0]['url']
+    lesson_type = os.environ.get('lesson_type') or derived_lesson_obj[0].get('type')
     res_ok = False
     # TODO: Employ per-lesson credentials
     if not no_ui:
@@ -106,11 +107,16 @@ class Lessons:
         encoded_lesson = self.encode_lesson(html_err_message)
       if res_ok:
         lesson_content = res
-        logger.info('Attempting to render and encode lesson at %s' % lesson_url)
-        rendered_lesson = self.render_lesson(lesson_url, lesson_content, no_render_markdown=no_render_markdown)
-        logger.debug(rendered_lesson)
+        if lesson_type == 'presentation':
+          logger.info(f"Lesson at URL {lesson_url} is of type 'presentation', not rendering HTML")
+          lesson_content_processed = lesson_content
+          logger.debug(lesson_content)
+        else:
+          logger.info('Attempting to render and encode lesson at %s' % lesson_url)
+          lesson_content_processed = self.render_lesson(lesson_url, lesson_content, no_render_markdown=no_render_markdown)
+          logger.debug(lesson_content_processed)
         try:
-          encoded_lesson = self.encode_lesson(rendered_lesson)
+          encoded_lesson = self.encode_lesson(lesson_content_processed)
         except Exception as e:
           err = str(e)
           logger.error('I had trouble encoding the lesson at %s' % lesson_url, err)
@@ -131,8 +137,8 @@ class Lessons:
                                 password=self.global_password,
                                 cache_path='.')
       lesson_content = str(res)
-      rendered_lesson = self.render_lesson(lesson_content, no_render_markdown=no_render_markdown)
-      print(rendered_lesson)
+      lesson_content_processed = self.render_lesson(lesson_content, no_render_markdown=no_render_markdown)
+      print(lesson_content_processed)
 
   def save_content(self, content):
     filename = self.webview.windows[0].create_file_dialog(self.webview.SAVE_DIALOG)

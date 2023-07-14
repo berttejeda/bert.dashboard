@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
+
+import { 
   FlexBox,
   Heading,
   SpectacleLogo,
@@ -21,246 +22,62 @@ import {
   Notes,
   DefaultTemplate,
   SlideLayout
-} from 'spectacle';
+ } from 'spectacle';
 
 export default function Presentation({}) {
 
-  const formidableLogo =
-    'https://avatars2.githubusercontent.com/u/5078602?s=280&v=4';
-
-  // SPECTACLE_CLI_THEME_START
   const theme = {
-    fonts: {
-      header: '"Open Sans Condensed", Helvetica, Arial, sans-serif',
-      text: '"Open Sans Condensed", Helvetica, Arial, sans-serif'
+    colors: {
+      primary: '#f00',
+      secondary: '#00f'
+    },
+    fontSizes: {
+      header: '64px',
+      paragraph: '28px'
+    },
+    borderStyles: {
+      border: '2px solid black'
+    },
+    shadows: {
+      boxShadow: 'black'
+    },
+    backdropStyle: {
+      position: 'relative',
+      backgroundRepeat: 'repeat',
+      backgroundColor: '#FFF',
+      backgroundImage: 'url("data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDYgNiIgd2lkdGg9IjYiIGhlaWdodD0iNiI+Cgk8dGl0bGU+aW1hZ2Utc3ZnPC90aXRsZT4KCTxkZWZzPgoJCTxpbWFnZSAgd2lkdGg9IjYiIGhlaWdodD0iNiIgaWQ9ImltZzEiIGhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBQVlBQUFBR0FnTUFBQUNkb2dmYkFBQUFBWE5TUjBJQjJja3Nmd0FBQUFsUVRGUkYrZm41Ky92NzlmWDFyakZYQ2dBQUFCUkpSRUZVZUp4allBeGdnS0FRQm9hd0JVQUVBQlNHQXpSem0wRk5BQUFBQUVsRlRrU3VRbUNDIi8+Cgk8L2RlZnM+Cgk8c3R5bGU+Cgk8L3N0eWxlPgoJPHVzZSBpZD0iTGF5ZXIiIGhyZWY9IiNpbWcxIiB4PSIwIiB5PSIwIi8+Cjwvc3ZnPg==")',
+      width: '100%',
+      height: '70%',
+      top: '2em'     
     }
   };
-  // SPECTACLE_CLI_THEME_END
-
-  const SlideFragments = () => (
-    <>
-      <Slide>
-        <Text>This is a slide fragment.</Text>
-      </Slide>
-      <Slide>
-        <Text>This is also a slide fragment.</Text>
-        <Appear>
-          <Text>This item shows up!</Text>
-        </Appear>
-        <Appear>
-          <Text>This item also shows up!</Text>
-        </Appear>
-      </Slide>
-    </>
-  );
 
   const template = <DefaultTemplate />;
 
   return (
-
-  <div>
-
-  <Deck theme={theme} template={template}>
-    <Slide>
-      <FlexBox height="100%">
-        <SpectacleLogo size={500} />
-      </FlexBox>
-      <Notes>
-        Spectacle supports notes per slide.
-        <ol>
-          <li>Notes can now be HTML markup!</li>
-          <li>Lists can make it easier to make points.</li>
-        </ol>
-      </Notes>
-    </Slide>
-    <Slide>
-      <FlexBox height="100%" flexDirection="column">
-        <Heading margin="0px" fontSize="150px">
-          ✨<i>Spectacle</i> ✨
-        </Heading>
-        <Heading margin="0px" fontSize="h2">
-          A ReactJS Presentation Library
-        </Heading>
-        <Heading margin="0px 32px" color="primary" fontSize="h3">
-          Where you can write your decks in JSX, Markdown, or MDX!
-        </Heading>
-      </FlexBox>
-    </Slide>
-    <Slide
-      transition={{
-        from: {
-          transform: 'scale(0.5) rotate(45deg)',
-          opacity: 0
-        },
-        enter: {
-          transform: 'scale(1) rotate(0)',
-          opacity: 1
-        },
-        leave: {
-          transform: 'scale(0.2) rotate(315deg)',
-          opacity: 0
-        }
-      }}
-      backgroundColor="tertiary"
-      backgroundImage="url(https://github.com/FormidableLabs/dogs/blob/main/src/beau.jpg?raw=true)"
-      backgroundOpacity={0.5}
-    >
-      <Heading>Custom Backgrounds</Heading>
-      <UnorderedList>
-        <ListItem>
-          <CodeSpan>backgroundColor</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundImage</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundOpacity</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundSize</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundPosition</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundRepeat</CodeSpan>
-        </ListItem>
-      </UnorderedList>
-    </Slide>
-    <Slide>
-      <Heading>Animated Elements</Heading>
-      <OrderedList>
-        <Appear>
-          <ListItem>Elements can animate in!</ListItem>
-        </Appear>
-        <Appear>
-          <ListItem>Out of order</ListItem>
-        </Appear>
-        <Appear priority={0}>
-          <ListItem>
-            Just identify the order with the prop <CodeSpan>priority</CodeSpan>!
-          </ListItem>
-        </Appear>
-      </OrderedList>
-    </Slide>
-    <Slide>
-      <FlexBox>
-        <Text>These</Text>
-        <Text>Text</Text>
-        <Text color="secondary">Items</Text>
-        <Text fontWeight="bold">Flex</Text>
-      </FlexBox>
-      <Grid gridTemplateColumns="1fr 2fr" gridColumnGap={15}>
-        <Box backgroundColor="primary">
-          <Text color="secondary">Single-size Grid Item</Text>
-        </Box>
-        <Box backgroundColor="secondary">
-          <Text>Double-size Grid Item</Text>
-        </Box>
-      </Grid>
-      <Grid
-        gridTemplateColumns="1fr 1fr 1fr"
-        gridTemplateRows="1fr 1fr 1fr"
-        gridRowGap={1}
-      >
-        {Array(9)
-          .fill('')
-          .map((_, index) => (
-            <FlexBox paddingTop={0} key={`formidable-logo-${index}`} flex={1}>
-              <Image src={formidableLogo} width={100} />
-            </FlexBox>
-          ))}
-      </Grid>
-    </Slide>
-    <SlideFragments />
-    <Slide>
-      <CodePane language="jsx">{`
-        import { createClient, Provider } from 'urql';
-
-        const client = createClient({ url: 'https://0ufyz.sse.codesandbox.io' });
-
-        const App = () => (
-          <Provider value={client}>
-            <Todos />
-          </Provider>
-        );
-        `}</CodePane>
-      <Box height={20} />
-      <CodePane language="java" showLineNumbers={false}>{`
-        public class NoLineNumbers {
-          public static void main(String[] args) {
-            System.out.println("Hello");
-          }
-        }
-        `}</CodePane>
-    </Slide>
-    <div>
+    <Deck theme={theme} template={template}>
       <Slide>
-        <Heading>This is a slide embedded in a div</Heading>
+        <Heading>Welcome to Spectacle</Heading>
       </Slide>
-    </div>
-    <MarkdownSlide componentProps={{ color: 'yellow' }}>
-      {`
-        # This is a Markdown Slide
+      <MarkdownSlide componentProps={{ color: 'yellow' }}>
+        {`
+          # This is a Markdown Slide
 
-        - You can pass props down to all elements on the slide.
-        - Just use the \`componentProps\` prop.
+          - You can pass props down to all elements on the slide.
+          - Just use the \`componentProps\` prop.
+          `}
+      </MarkdownSlide>
+      <MarkdownSlide animateListItems>
+        {`
+         # This is also a Markdown Slide
+
+         It uses the \`animateListItems\` prop.
+
+         - Its list items...
+         - ...will appear...
+         - ...one at a time.
         `}
-    </MarkdownSlide>
-    <MarkdownSlide animateListItems>
-      {`
-       # This is also a Markdown Slide
-
-       It uses the \`animateListItems\` prop.
-
-       - Its list items...
-       - ...will appear...
-       - ...one at a time.
-      `}
-    </MarkdownSlide>
-    <Slide>
-      <Grid
-        gridTemplateColumns="50% 50%"
-        gridTemplateRows="50% 50%"
-        height="100%"
-      >
-        <FlexBox alignItems="center" justifyContent="center">
-          <Heading>This is a 4x4 Grid</Heading>
-        </FlexBox>
-        <FlexBox alignItems="center" justifyContent="center">
-          <Text textAlign="center">
-            With all the content aligned and justified center.
-          </Text>
-        </FlexBox>
-        <FlexBox alignItems="center" justifyContent="center">
-          <Text textAlign="center">
-            It uses Spectacle <CodeSpan>{'<Grid />'}</CodeSpan> and{' '}
-            <CodeSpan>{'<FlexBox />'}</CodeSpan> components.
-          </Text>
-        </FlexBox>
-        <FlexBox alignItems="center" justifyContent="center">
-          <Box width={200} height={200} backgroundColor="secondary" />
-        </FlexBox>
-      </Grid>
-    </Slide>
-    <MarkdownSlideSet>
-      {`
-        # This is the first slide of a Markdown Slide Set
-        ---
-        # This is the second slide of a Markdown Slide Set
-        `}
-    </MarkdownSlideSet>
-    <SlideLayout.List
-      title="Slide layouts!"
-      items={['Two-column', 'Lists', 'And more!']}
-      animateListItems
-    />
-  </Deck>
-
-  </div>
-
-
+      </MarkdownSlide>      
+    </Deck>
   );
-
-
-}
+};

@@ -22,6 +22,8 @@ import Clippy from '../../partials/Clippy/Clippy'
 // For base64 decode/encode
 import { Buffer } from 'buffer'
 
+import Presentation from 'partials/Presentation'
+
 import {
   useParams
 } from "react-router";
@@ -29,6 +31,7 @@ import {
 export default function LessonPage({
 }) {
 
+  // Derive topic and lesson names from URL parameters
   let { topicName, lessonName } = useParams();
 
   // For receiving the lesson data
@@ -94,7 +97,7 @@ export default function LessonPage({
       });  
 
   }, [lesson])
-
+  
   return (
 
       <div className='lesson-container'>
@@ -105,6 +108,7 @@ export default function LessonPage({
           [
             <nav key="js-toc-on" className="js-toc" style={tocVisible}></nav>,
             <main key="lesson-content" className='lesson-content-container' dangerouslySetInnerHTML={{ __html: Buffer.from(lesson, 'base64').toString('ascii'); }} />,
+            // <Presentation />
             <Footer lesson={lesson} />
           ]
           :

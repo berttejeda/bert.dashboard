@@ -31,6 +31,8 @@ import { useDispatch } from "react-redux";
 
 import rootActions from 'actions'
 
+import Presentation from 'partials/Presentation'
+
 if (window.performance) {
   if (performance.navigation.type == 1) {
     console.log( "Application restarted" );
@@ -94,6 +96,7 @@ export default function App () {
             {/*<Route path="/knowledgebase/:lessonID" element={<div>This is a lesson!!</div>} />*/}
             <Route path="/knowledgebase/:topicName/:lessonName/*" element={<LessonPage />} />
             <Route path="/notes" element={<MyNotes />} />
+            <Route path="/prezo" element={<Presentation />} />
           </Routes>
 
 

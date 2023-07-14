@@ -160,6 +160,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 ) : null
               }
               {/* Messages */}
+{/*
               <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('messages') && 'bg-slate-900'}`}>
                 <NavLink
                   end
@@ -184,14 +185,18 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         Messages
                       </span>
                     </div>
+*/}              
                     {/* Badge */}
+{/*              
                     <div className="flex flex-shrink-0 ml-2">
                       <span className="inline-flex items-center justify-center h-5 text-xs font-medium text-white bg-indigo-500 px-2 rounded">4</span>
                     </div>
                   </div>
                 </NavLink>
               </li>
+*/}              
               {/* Inbox */}
+{/*              
               <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('inbox') && 'bg-slate-900'}`}>
                 <NavLink
                   end
@@ -215,7 +220,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                 </NavLink>
               </li>
+*/}              
               {/* Calendar */}
+{/* 
               <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('calendar') && 'bg-slate-900'}`}>
                 <NavLink
                   end
@@ -238,10 +245,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                 </NavLink>
               </li>
+*/}
             </ul>
           </div>
         </div>
-
         {/* Expand / collapse button */}
         <div className="pt-3 lg:inline-flex justify-end mt-auto">
           <div className="px-3 py-2">

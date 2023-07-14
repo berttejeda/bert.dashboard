@@ -74,7 +74,7 @@ export default function Dashboard({}) {
         <WelcomeBanner />
         {/* Cards */}
         <div className="grid grid-cols-12 gap-6">
-        <DashboardCard01/>
+        {/*<DashboardCard01/>*/}
         {
           Object.keys(dashboardCards).length > 0 
           ? 

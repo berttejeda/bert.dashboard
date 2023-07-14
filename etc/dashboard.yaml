@@ -1,17 +1,17 @@
 dashboard:
   greeting: |-
     Here is what's in focus today:
-  cards:
-    recent_activity:
-      title: "Latest Market News"
-      type: message.container
-      data:
-        exec:
-            # ecli message.container.init
-          command: |-
-            python /Users/etejeda/git/self/bert.dashboard.plugins/message/container/init.py
-          args:
-            - testing
+  # cards:
+  #   recent_activity:
+  #     title: "Latest Market News"
+  #     type: message.container
+  #     data:
+  #       exec:
+  #           # ecli message.container.init
+  #         command: |-
+  #           python /Users/etejeda/git/self/bert.dashboard.plugins/message/container/init.py
+  #         args:
+  #           - testing
 
 types:
   - message.container

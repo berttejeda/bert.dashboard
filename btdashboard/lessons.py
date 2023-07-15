@@ -1,5 +1,7 @@
 import base64
+import json
 import os
+import re
 import markdown
 from btdashboard.config import AppConfig
 from btdashboard.defaults import default_verify_tls, default_lessons_config_file
@@ -14,7 +16,6 @@ logger = Logger().init_logger(__name__)
 class Lessons:
 
   def __init__(self, **kwargs):
-
 
     args = kwargs['args']
     no_render_markdown = args.no_render_markdown
@@ -31,6 +32,7 @@ class Lessons:
       'GLOBAL_USERNAME') or args.username  # or self.config_util.get(self.settings,'auth.global.username')
     self.global_password = os.environ.get(
       'GLOBAL_PASSWORD') or args.password  # or self.config_util.get(self.settings,'auth.global.password')
+    self.slides_pattern = re.compile('^# ')
 
   def encode_lesson(self, rendered_lesson):
       rendered_lesson_bytes = rendered_lesson.encode("utf-8")
@@ -75,6 +77,10 @@ class Lessons:
                                           )
       return rendered_lesson
 
+  def get_markdown_sections(self, s):
+    for sec in s.split('\n# '):
+      yield sec if sec.startswith('# ') else '# ' + sec
+
   # TODO: lesson_url should be renamed to lesson_url
   def load_lesson(self, utf8_encoded_uri, no_ui=False, no_render_markdown=False):
     lesson_slug = urllib.parse.unquote(utf8_encoded_uri)
@@ -109,14 +115,15 @@ class Lessons:
         lesson_content = res
         if lesson_type == 'presentation':
           logger.info(f"Lesson at URL {lesson_url} is of type 'presentation', not rendering HTML")
-          lesson_content_processed = lesson_content
+          lesson_content_obj = [sec for i,sec in enumerate(self.get_markdown_sections(lesson_content))]
+          lesson_content_output = json.dumps(lesson_content_obj)
           logger.debug(lesson_content)
         else:
           logger.info('Attempting to render and encode lesson at %s' % lesson_url)
-          lesson_content_processed = self.render_lesson(lesson_url, lesson_content, no_render_markdown=no_render_markdown)
-          logger.debug(lesson_content_processed)
+          lesson_content_output = self.render_lesson(lesson_url, lesson_content, no_render_markdown=no_render_markdown)
+          logger.debug(lesson_content_output)
         try:
-          encoded_lesson = self.encode_lesson(lesson_content_processed)
+          encoded_lesson = self.encode_lesson(lesson_content_output)
         except Exception as e:
           err = str(e)
           logger.error('I had trouble encoding the lesson at %s' % lesson_url, err)
@@ -137,8 +144,8 @@ class Lessons:
                                 password=self.global_password,
                                 cache_path='.')
       lesson_content = str(res)
-      lesson_content_processed = self.render_lesson(lesson_content, no_render_markdown=no_render_markdown)
-      print(lesson_content_processed)
+      lesson_content_output = self.render_lesson(lesson_content, no_render_markdown=no_render_markdown)
+      print(lesson_content_output)
 
   def save_content(self, content):
     filename = self.webview.windows[0].create_file_dialog(self.webview.SAVE_DIALOG)

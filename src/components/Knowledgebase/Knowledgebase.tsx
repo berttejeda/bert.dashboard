@@ -18,7 +18,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { useTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { hashString, tailwindConfig, hexToRGB } from 'utils/Utils';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -161,14 +161,24 @@ export default function Knowledgebase() {
     console.log(rowData)
   }
 
-  const handleRowOnClick = (rowName, rowData) => {
+  const handleRowOnClick = (rowName, rowData, lessonType) => {
     const topicName = rowName
     const lessonName = rowData['name']
     const topic_slug = encodeURIComponent(topicName);
     const lesson_slug = encodeURIComponent(lessonName)
     const slug = `${topic_slug}/${lesson_slug}`;
     console.log(`Navigating to ${slug}`)
-    navigate(slug);
+    if (lessonType) {
+      const params = { type: lessonType };
+      navigate({
+        pathname: slug,
+        search: createSearchParams({
+          type: lessonType
+        }).toString()
+      });      
+    } else {
+      navigate(slug);
+    }
   }  
 
   return (
@@ -184,6 +194,7 @@ export default function Knowledgebase() {
             <StyledTableCell align="left">Lesson Topic</StyledTableCell>
             <StyledTableCell align="left">Lesson Name</StyledTableCell>
             <StyledTableCell align="left">Lesson Source URL</StyledTableCell>
+            <StyledTableCell align="left">Lesson Type</StyledTableCell>
             <StyledTableCell align="left">Lesson Duration (minutes)</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -195,12 +206,13 @@ export default function Knowledgebase() {
               : flattendLessons
             ).map((lessonData)=> {
               {
+                {let lessonType = lessonData[1]['type'] ? lessonData[1]['type'] : 'standard'}
                 {let lessonID = hashString(`${lessonData[0].substring(0,3).toUpperCase()}_${lessonData[0]}_${lessonData[1]['name']}`)}
                 return <StyledTableRow 
                 key={lessonID}
                 hover=true
                 onClick={() => {
-                  handleRowOnClick(lessonData[0], lessonData[1]);
+                  handleRowOnClick(lessonData[0], lessonData[1], lessonType);
                 }}
                 >
                   <TableCell component="th" scope="row" style={{ width: 160 }}>
@@ -216,7 +228,10 @@ export default function Knowledgebase() {
                     {lessonData[1]['url']}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
-                    {lessonData[1]['duration']}
+                    {lessonData[1]['type'] ? lessonData[1]['type'] : 'standard'}
+                  </TableCell>                  
+                  <TableCell style={{ width: 160 }} align="left">
+                    {lessonType}
                   </TableCell>
                 </StyledTableRow>
               }

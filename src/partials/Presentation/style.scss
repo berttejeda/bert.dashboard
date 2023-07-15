@@ -1,0 +1,23 @@
+.deck {
+  
+  div:first-child {
+    width: 100%;
+  }
+
+  [color="primary"] {
+    font-size: 1em;
+  }
+
+  [color="secondary"] {
+    font-size: 2em;
+  }
+
+  a {
+    // all: unset !important;
+    text-shadow: none !important;
+    font-size: 1em !important;
+  }
+
+
+
+}

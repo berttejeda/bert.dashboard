@@ -5,7 +5,7 @@ import React,{useEffect, useState} from 'react';
 import { Buffer } from 'buffer'
 
 // Componnet Styling
-import './LessonPage.scss'
+import './style.scss'
 
 // Auto-generated Table of Contents
 import * as tocbot from 'tocbot';
@@ -28,15 +28,21 @@ import {
   useParams
 } from "react-router";
 
+import {
+  useSearchParams
+} from "react-router-dom";
+
 export default function LessonPage({
 }) {
 
   // Derive topic and lesson names from URL parameters
   let { topicName, lessonName } = useParams();
-
+  const [searchParams] = useSearchParams();
   // For receiving the lesson data
   // from the python process
   const [lesson, loadLesson] = useState('')
+
+  const lessonType = searchParams.get('type')
 
   const tocVisible = {
     visibility: "visible",
@@ -97,18 +103,24 @@ export default function LessonPage({
       });  
 
   }, [lesson])
-  
+    
   return (
 
       <div className='lesson-container'>
         <div className='lesson-container-title'>
           <Clippy/>
         </div>
-        { (lesson) ?
+        { (lesson && lessonType == 'standard') ?
           [
             <nav key="js-toc-on" className="js-toc" style={tocVisible}></nav>,
             <main key="lesson-content" className='lesson-content-container' dangerouslySetInnerHTML={{ __html: Buffer.from(lesson, 'base64').toString('ascii'); }} />,
             // <Presentation />
+            <Footer lesson={lesson} />
+          ]
+          :
+          (lesson && lessonType == 'presentation') ?
+          [
+            <Presentation lesson={lesson} />,
             <Footer lesson={lesson} />
           ]
           :

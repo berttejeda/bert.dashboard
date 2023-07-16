@@ -56,7 +56,7 @@ export default function Presentation(lesson, {children}) {
   const counter = 0
 
   return (
-    <Deck className={"deck"} theme={theme} template={template}>
+    <Deck className={"deck"} transition={['none']} theme={theme} template={template}>
       {
         Object.entries(lessonData).map(([slide, slideContent]) => {
           {

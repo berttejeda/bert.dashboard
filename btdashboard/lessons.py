@@ -77,8 +77,8 @@ class Lessons:
                                           )
       return rendered_lesson
 
-  def get_markdown_sections(self, s):
-    for sec in s.split('\n# '):
+  def get_markdown_sections(self, content):
+    for sec in content.split('\n# '):
       yield sec if sec.startswith('# ') else '# ' + sec
 
   # TODO: lesson_url should be renamed to lesson_url

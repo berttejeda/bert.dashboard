@@ -64,16 +64,6 @@ export default function Footer(lesson, {children}) {
     ? 'form-control invalid mb-3'
     : 'form-control mb-3'  
 
-  const terminalRefreshSemaphore = Math.random()
-
-  const [isRefreshed, setIsRefreshed] = useState(terminalRefreshSemaphore);
-
-  const refreshTerminalSize = () => {
-    setIsRefreshed(Math.random())
-  };
-  
-  useEffect(refreshTerminalSize, []);  
-
   return (
 
   <div className={footerClasses}>
@@ -92,8 +82,7 @@ export default function Footer(lesson, {children}) {
           value={EnteredWsUrl}
         />
 
-        <button className='btn ho xi ye ml-1'>Connect</button>
-        <a className='functions ho xi ye ml-1' htmlFor='name' onClick={refreshTerminalSize}>Refresh</a>
+        <button className='btn ho xi ye ml-3'>Connect</button>
         {nameInputIsInvalid && (
           <p className='block error-text text-sm gp rt'>
           Websocket URL is empty or invalid!
@@ -109,7 +98,7 @@ export default function Footer(lesson, {children}) {
             Read more at <a href="https://github.com/berttejeda/bert.webterminal">https://github.com/berttejeda/bert.webterminal</a></div>
           }
         { (wsUrl && lesson) ?
-          <XTerm key={wsUrl} wsUrl={wsUrl} lesson={lesson} refreshTerminalSize={refreshTerminalSize} />
+          <XTerm key={wsUrl} wsUrl={wsUrl} lesson={lesson} />
           :
           <div/>
         }

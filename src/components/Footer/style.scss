@@ -11,8 +11,15 @@
   padding: 20px;
   height: 20rem;
   transform: translateX(-1px);
+
+  a.functions {
+    // all: unset !important;
+    text-shadow: none !important;
+    background-image: none !important;
+  }
   
 }
+
 
 .mb-3 input, optgroup, select, textarea {
   width: 30em;

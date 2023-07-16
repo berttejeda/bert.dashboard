@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react';
 
-import './Footer.scss'
+import './style.scss'
 
 // WebTerminal Component
 import XTerm from "components/XTerm";

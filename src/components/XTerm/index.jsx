@@ -25,6 +25,7 @@ export default function XTerm({
   wsUrl,
   lesson,
   wsRef,
+  refreshTerminalSize,
   ...props
 }: XTermProps & JSX.IntrinsicElements["div"]) {
   const divRef = useRef<HTMLDivElement>();
@@ -51,6 +52,7 @@ export default function XTerm({
       console.log("Sending data: ", wsData)
       // socket.current.send(e.target.innerText + '\n')
       sendMessage(wsData + '\n')
+      // refreshTerminalSize()
   }
 
   // Event listener for the handleCodeClick function
@@ -81,7 +83,7 @@ export default function XTerm({
     addClickEvents()
     setSocketUrl(wsUrl)
 
-  }, [lesson])   
+  }, [lesson, refreshTerminalSize])   
 
   const readyStateText = {
     [WebSocket.CONNECTING]: "Connecting",
@@ -154,7 +156,7 @@ export default function XTerm({
       }
 
     }
-  }, [socket, lesson]);
+  }, [socket, lesson, refreshTerminalSize]);
 
   return (
     <div

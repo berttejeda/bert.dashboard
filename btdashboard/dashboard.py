@@ -4,6 +4,7 @@ from btdashboard.config import AppConfig
 from btdashboard.defaults import default_dashboard_config_file
 from btdashboard.defaults import default_verify_tls
 from btdashboard.logger import Logger
+from schema import Schema, SchemaError
 from subprocess import run
 
 logger = Logger().init_logger(__name__)
@@ -26,9 +27,11 @@ class Dashboard():
     for dk, dv in self.settings.dashboard.items():
       if hasattr(self.settings.dashboard[dk], 'items'):
         for ck,cv in list(self.settings.dashboard[dk].items()):
+          logger.info(f"Processing dashboard object '{ck}'")
           for k, v in list(self.settings.dashboard[dk][ck].items()):
             data = self.settings.dashboard[dk][ck].get('data', {})
             data_exec = data.get('exec')
+            data_schema = data.get('schema')
             if data_exec:
               try:
                 command = data_exec.command
@@ -39,7 +42,18 @@ class Dashboard():
                 json_result = json.loads(exec_result_decoded)
               except Exception as e:
                 logger.error(f'Encountered an error rending Dashboard data - {e}')
-                json_result = json.loads('{"error":"%s"}' % e)
+                json_result = {"error": e}
+              if data_schema:
+                logger.info(f'{ck} - validating data schema')
+                if isinstance(data_schema, dict):
+                  for validation in data_schema.get('validations', []):
+                    data_schema_obj = eval(validation)
+                    schema = Schema(data_schema_obj)
+                    try:
+                      schema.validate(json_result)
+                    except SchemaError as e:
+                      json_result = {"error": json.dumps(e.args)}
+                logger.info(f"Schema validation passed for '{ck}'")
               self.settings.dashboard[dk][ck]['data'] = json_result
               break
     logger.info('Dashboard data rendering complete')

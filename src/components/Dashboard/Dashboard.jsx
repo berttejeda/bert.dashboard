@@ -4,7 +4,8 @@ import WelcomeBanner from '../../partials/dashboard/WelcomeBanner';
 import DashboardAvatars from '../../partials/dashboard/DashboardAvatars';
 import FilterButton from '../../partials/actions/FilterButton';
 import Datepicker from '../../partials/actions/Datepicker';
-import DashboardCard from '../../partials/dashboard/DashboardCard';
+import MessageCard from '../../partials/dashboard/MessageCard';
+import NewsCard from '../../partials/dashboard/NewsCard';
 import DashboardCard01 from '../../partials/dashboard/DashboardCard01';
 import DashboardCard02 from '../../partials/dashboard/DashboardCard02';
 import DashboardCard03 from '../../partials/dashboard/DashboardCard03';
@@ -75,20 +76,24 @@ export default function Dashboard({}) {
         {/* Cards */}
         <div className="grid grid-cols-12 gap-6">
         {/*<DashboardCard01/>*/}
-        {
-          Object.keys(dashboardCards).length > 0 
-          ? 
-            Object.entries(dashboardCards).map((cardObj)=> {
-              {let cardID = hashString(cardObj[1][0])}
-              {let cardTitle = cardObj[1][1].title}
-              {let cardData = cardObj[1][1].data}
-              return <DashboardCard 
-                key={cardID} 
-                cardTitle={cardTitle} 
-                cardData={cardData} 
-              />
-            }
-            )
+        { 
+          dashboardCards 
+          ?
+            Object.keys(dashboardCards).length > 0 
+            ? 
+              Object.entries(dashboardCards).map((cardObj)=> {
+                {let cardID = hashString(cardObj[1][0])}
+                {let cardTitle = cardObj[1][1].title}
+                {let cardData = cardObj[1][1].data}
+                return <NewsCard 
+                  key={cardID} 
+                  cardTitle={cardTitle} 
+                  cardData={cardData} 
+                />
+              }
+              )
+            : 
+              null
           : 
             null
         }

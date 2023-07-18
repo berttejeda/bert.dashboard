@@ -1,0 +1,20 @@
+ul.news-article {
+  
+  padding: 0;
+
+  li {
+    list-style-type: circle !important;
+    border: 0.1em solid #ddd;
+  }
+  
+  a {
+    text-shadow: 1px !important;
+    font-size: small !important;
+  }
+
+  a:hover {
+    background-color: yellow;
+    color: blue;
+  }
+
+}

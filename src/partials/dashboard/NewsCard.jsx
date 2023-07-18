@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { hashString } from 'utils/Utils'
 
+// Componnet Styling
+import './style.scss'
+
 export default function DashboardCard({ 
     cardData,
     cardTitle
@@ -8,6 +11,9 @@ export default function DashboardCard({
   ) {
 
   let counter = 0
+
+  console.log('Rendering News Card')
+  console.log(cardData)
 
 
   return (
@@ -20,27 +26,28 @@ export default function DashboardCard({
       {        
         Object.keys(cardData).length > 0 && !cardData?.error
         ?
-          Object.entries(cardData).map((messageGroupObj)=> {
-            {let messageGroupID = messageGroupObj[0]}
+          Object.entries(cardData).map((newsGroupObj)=> {
+            {let newsGroupObjGroupID = newsGroupObj[0]}
             {counter++}
             return (
-                <div key={`div-${messageGroupID}-${counter}`}>
+                <div key={`div-${newsGroupObjGroupID}-${counter}`}>
                   <header className="text-xs uppercase text-slate-400 bg-slate-50 rounded-sm font-semibold p-2">
-                  {messageGroupID}
+                  {newsGroupObjGroupID}
                   </header>
-                  <ul key={`ul-${messageGroupID}`} className="my-1">
+                  <ul key={`ul-${newsGroupObjGroupID}`} className="news-article my-1">
                   {
-                  Object.entries(messageGroupObj[1]).map((messageObj)=> {
-                      {let message = messageObj[1]}
-                      {let messageHash = hashString(message)}
-                      {counter++}
-                      return <li key={`li-${messageHash}-${counter}`} className="flex px-2">
-                      <div className="self-center font-medium text-slate-800" key={`div-${messageHash}-${counter}`}>{message}</div>
-                      </li>
-                  })
+                    Object.entries(newsGroupObj[1]).map((newsObj)=> {
+                        {let articleTitle = newsObj[1][1]}
+                        {let articleURL = newsObj[1][2]}
+                        {let articleTitleHash = hashString(articleTitle)}
+                        {counter++}
+                        return <li key={`li-${articleTitleHash}-${counter}`} className="flex px-2">
+                        <a key={`div-${articleTitleHash}-${counter}`} href={articleURL}>{articleTitle}</a>
+                        </li>
+                    })
                   }
                   </ul>
-                </div>
+                </div>                
               )
             }
             )
@@ -49,7 +56,7 @@ export default function DashboardCard({
               {
                 !cardData?.error
                 ?
-                  'RECEIVED NO MESSAGES'
+                  'RECEIVED NO ARTICLES'
                 : 'Error'
               }
               </header>

@@ -4,6 +4,10 @@ topics:
       - name: Lesson 01 - Introduction
         url: https://raw.githubusercontent.com/berttejeda/bert.lessons/main/ansible/lesson-01/lesson.md
         duration: 20
+      - name: Lesson 04 - Ansible Records ARA
+        url: https://raw.githubusercontent.com/berttejeda/bert.lessons/main/ansible/lesson-04/lesson.md
+        duration: 20
+        type: presentation
   crossplane:
     lessons:
       - name: Lesson 01 - Introduction
@@ -24,7 +28,7 @@ topics:
     lessons:
       - name: Lesson 01 - Introduction
         url: http://10.10.1.60:5008/README.md
-        duration: 15        
+        duration: 15      
   terraform:
     lessons:
       - name: Lesson 01 - Introduction

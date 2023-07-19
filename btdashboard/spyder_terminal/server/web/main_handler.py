@@ -5,6 +5,7 @@ import tornado.web
 import tornado.escape
 from os import getcwd
 from urllib.parse import quote
+from pathlib import Path
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -21,7 +22,8 @@ class MainHandler(tornado.web.RequestHandler):
         # We need to do percent encoding for sending the cwd through a cookie
         # For further information see spyder-ide/spyder-terminal#225
         self.set_cookie('cwd', quote(cwd))
-        self.render('../static/build/index.html')
+        index_html_path = Path('../static/build/index.html').resolve().as_posix()
+        self.render(index_html_path)
 
     @tornado.gen.coroutine
     def post(self):

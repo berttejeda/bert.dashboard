@@ -1,10 +1,10 @@
 import argparse
-from btdashboard.defaults import app_name, \
+from btdashboard.defaults import default_app_name, \
   default_open_browser_delay
 
 def parse_args(**kwargs):
 
-  parser = argparse.ArgumentParser(description=app_name)
+  parser = argparse.ArgumentParser(description=default_app_name)
   parser.add_argument('--username', '-U', help="Username, if the URL requires authentication")
   parser.add_argument('--password', '-P', help="Password, if the URL requires authentication")
   parser.add_argument('--lesson-url', '-url', help="The URL for the lesson definition")

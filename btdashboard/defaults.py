@@ -19,13 +19,16 @@ default_webterminal_env = {
 }
 
 # Flask app settings
-app_name = "Bert's Dashboard"
 gui_dirname = 'dashboard.gui'
+default_app_name = "Bert's Dashboard"
 default_app_port = 10000
 default_open_browser_delay = 1.25
 default_app_host_address = '0.0.0.0'
 default_app_config_file = 'etc/app.yaml'
 default_lessons_config_file = 'etc/lessons.yaml'
+default_dashboard_throttle = 5
+default_dashboard_backoff_sleep_time = 2
+default_dashboard_backoff_num_retries = 4
 default_dashboard_config_file = 'etc/dashboard.yaml'
 default_sidebar_config_file = 'etc/sidebar.yaml'
 default_app_id = 'btDashboard'

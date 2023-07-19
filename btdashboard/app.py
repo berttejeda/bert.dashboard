@@ -12,6 +12,7 @@ Components:
     The code for this was taken from [spyder-terminal](https://github.com/spyder-ide/spyder-terminal).
 """
 
+from btconfig.configutils import AttrDict
 from btdashboard.args import parse_args
 from btdashboard.config import AppConfig
 from btdashboard.defaults import default_app_port, \
@@ -33,12 +34,13 @@ from btdashboard.webterminal import WebTerminal
 from btdashboard.websocket import WebSocket
 from flask import Flask, jsonify, make_response, request, send_from_directory
 from flask_cors import CORS
+import json
 import os
 import requests
 import threading
 import webbrowser
-
 import mimetypes
+
 mimetypes.add_type('application/javascript', '.js')
 mimetypes.add_type('application/javascript', '.mjs')
 mimetypes.add_type('text/css', '.css')
@@ -50,69 +52,59 @@ args = parse_args()
 logger_obj = Logger(logfile_path=args.logfile_path, logfile_write_mode=args.logfile_write_mode)
 logger = logger_obj.init_logger('app')
 
-verify_tls = args.no_verify_tls or default_verify_tls
+global app_config
 
-# Initialize App Configuration
-app_config_file = args.app_config_file or default_app_config_file
-if app_config_file:
-  app_config = AppConfig().initialize(
-      args=vars(args),
-      config_file=app_config_file,
-      verify_tls=verify_tls
-      )
-else:
-  app_config = default_app_config
-
-# Initialize Lessons
-lessons = Lessons(args=args)
-
-if args.api_only:
-    static_assets_folder = None
-else:
-    static_assets_folder = args.static_assets_folder or get_static_folder()
-    logger.info(f'Static assets folder is {static_assets_folder}')
-
-# Initialize Topics
-topics = Topics(
-  settings=lessons.settings,
-  args=args)
-
-# Initialize Dashboard
-dashboard = Dashboard(args=args)
-
-# Initialize Sidebar
-sidebar = SideBar(args=args)
-
-# Initialize Websocket handler
-websocket = WebSocket()
-
-if static_assets_folder:
-    app = Flask(__name__, static_url_path='', static_folder=static_assets_folder)
-    if args.cors_origin:
-      CORS(app, resources={r"*": {"origins": args.cors_origin}})
-    else:
-      logger.warning('CORS Policy effectively disabled, as no Origin Pattern specified')
-      CORS(app, resources={r"*": {"origins": "*"}})
-else:
-    logger.info('Serving API Only, no static assets')
-    app = Flask(__name__)
-    if args.cors_origin:
-      CORS(app, resources={r"*": {"origins": args.cors_origin}})
-    else:
-      logger.warning('CORS Policy effectively disabled, as no Origin Pattern specified')
-      CORS(app, resources={r"*": {"origins": "*"}})
-
-def start_webterminal():
-  webterminal_listen_host  = args.webterminal_listen_host  or default_webterminal_listen_host 
+def start_webterminal(app_config_input):
+  app_config = json.loads(app_config_input)
+  webterminal_listen_host  = args.webterminal_listen_host or default_webterminal_listen_host
   webterminal_listen_port = args.webterminal_listen_port or default_webterminal_listen_port
   WebTerminal(app_config, args).start(host=webterminal_listen_host , port=webterminal_listen_port)
 
-def start_api():
+def start_api(app_config_input):
   """API functions.
   
   This function defines the API routes and starts the API Process.
 
   """
+  app_config = AttrDict(json.loads(app_config_input))
+  # Initialize Lessons
+  lessons = Lessons(args=args)
+
+  if args.api_only:
+      static_assets_folder = None
+  else:
+      static_assets_folder = args.static_assets_folder or get_static_folder()
+      logger.info(f'Static assets folder is {static_assets_folder}')
+
+  # Initialize Topics
+  topics = Topics(
+      settings=lessons.settings,
+      args=args)
+
+  # Initialize Dashboard
+  dashboard = Dashboard(args=args)
+
+  # Initialize Sidebar
+  sidebar = SideBar(args=args)
+
+  # Initialize Websocket handler
+  websocket = WebSocket()
+
+  if static_assets_folder:
+      app = Flask(__name__, static_url_path='', static_folder=static_assets_folder)
+      if args.cors_origin:
+          CORS(app, resources={r"*": {"origins": args.cors_origin}})
+      else:
+          logger.warning('CORS Policy effectively disabled, as no Origin Pattern specified')
+          CORS(app, resources={r"*": {"origins": "*"}})
+  else:
+      logger.info('Serving API Only, no static assets')
+      app = Flask(__name__)
+      if args.cors_origin:
+          CORS(app, resources={r"*": {"origins": args.cors_origin}})
+      else:
+          logger.warning('CORS Policy effectively disabled, as no Origin Pattern specified')
+          CORS(app, resources={r"*": {"origins": "*"}})
 
   @app.route('/', defaults={'path': ''})
   @app.route('/<path:path>')
@@ -218,7 +210,19 @@ def start_api():
 
 def main():
     """The main entrypoint
-    """    
+    """
+    verify_tls = args.no_verify_tls or default_verify_tls
+
+    # Initialize App Configuration
+    app_config_file = args.app_config_file or default_app_config_file
+    if app_config_file:
+        app_config = AppConfig().initialize(
+            args=vars(args),
+            config_file=app_config_file,
+            verify_tls=verify_tls
+        )
+    else:
+        app_config = default_app_config
 
     if args.webterminal_only:
       start_webterminal()
@@ -226,12 +230,12 @@ def main():
       import multiprocessing as mp
       if hasattr(os, 'getppid'):  # only available on Unix
           logger.info(f'parent process: {os.getppid()}')
-      
-      proc_api = mp.Process(target=start_api)
+      logger.info('========================================')
+      proc_api = mp.Process(target=start_api, args=(json.dumps(app_config),))
       proc_api.deamon = True
       proc_api.start()
 
-      proc_webterminal = mp.Process(target=start_webterminal)
+      proc_webterminal = mp.Process(target=start_webterminal, args=(json.dumps(app_config),))
       proc_webterminal.deamon = True
       proc_webterminal.start()
 

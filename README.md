@@ -2,7 +2,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Bert's Dashboard](#berts-dashboard)
 - [Overview](#overview)
     - [What is this and why did you make it?](#what-is-this-and-why-did-you-make-it)
     - [How did you make this?](#how-did-you-make-this)
@@ -17,7 +16,7 @@
 - [Building the installer](#building-the-installer)
 - [Developing the app](#developing-the-app)
 - [Configuration File](#configuration-file)
-    - [Configuration File - Defaults](#configuration-file---defaults)
+    - [Configuration File - Defaults](#app-defaults)
     - [Storing credentials - OS Keyring](#storing-credentials---os-keyring)
         - [Windows](#windows)
 - [Lessons](#lessons)
@@ -29,6 +28,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 <a name="top"></a>
+===================
 Bert's Dashboard
 ===================
 
@@ -39,40 +39,56 @@ Bert's Dashboard
 <a name="what-is-this-and-why-did-you-make-it"></a>    
 ## What is this and why did you make it? 
 
-Think [Katacoda](https://www.katacoda.com/), but instead of a website with learning examples, 
-you have a web app that creates hands-on lessons from markdown-formatted, jina-templated documents, 
+This is my attempt at creating a sort of life dashboard for myself.
+
+The aim is to make it as customizable as possible in as easy a way as possible.
+
+This project is the successor to [bert.bill](https://github.com/berttejeda/bert.bill).
+
+As such, the interactive lesson features from that project have been ported over.
+
+As with the previous project, the interactive lesson feature was inspired by [Katacoda](https://www.katacoda.com/).
+And, as with the previous iteration of my work, instead of a website with learning examples, you have a web app that creates hands-on lessons from markdown-formatted, jina-templated documents, 
 complete with a web terminal for interactive practice.
 
 <a name="how-did-you-make-this"></a>    
 ## How did you make this?
 
-- The UI is written in [ReactJS](https://reactjs.org/)
-- The API is using [Flask](https://flask.palletsprojects.com/en/2.1.x/) 
+- The UI
+    - [ReactJS](https://reactjs.org/) for the UI framework
+    - [TailwindCSS](https://tailwindcss.com/) for easier CSS
+    - [Mosaic Lite Admin Dashboard](https://github.com/cruip/tailwind-dashboard-template) for the UI layout
+    - [React Redux](https://react-redux.js.org/) for session state management
+- The API 
+    - [Python Flask](https://flask.palletsprojects.com/en/2.1.x/)
 
 <a name="whats-it-look-like"></a>    
 ## What's it look like?
 
-Here's a screenshot:
+Here's a screenshot of the dashboard:
 
-![webterminal](res/webterminal.gif)
+![dashboard](res/dashboard.png)
 
-Notice the menu dropdown for _Available Lessons_.
-The entries are generated dynamically as defined in the app's [configuration file](#configuration-file).
+Here's a screenshot of the Knowledgebase layout:
+
+![knowledgebase](res/knowledgebase.png)
+
 
 <a name="features"></a>
 # Features
 
-* Define your lessons catalog in a YAML-formatted configuration file, e.g. [lessons.yaml.example](lessons.yaml.example)
-* [Lessons](#Lessons) are Markdown-formatted files
-  1. First rendered as [jinja](https://jinja.palletsprojects.com/en/3.0.x/) templates
-  1. Then rendered as HTML<br />
+* The dashboard cards can be configured via the dashboard configration file: [etc/dashboard.yaml](etc/dashboard.yaml).
+* The knowledgebase catalog is configured via the lessons configuration file: [etc/lessons.yaml](etc/lessons.yaml)
+    * [Lessons](#Lessons) are Markdown-formatted files
+        1. First rendered as [jinja](https://jinja.palletsprojects.com/en/3.0.x/) templates
+        1. Then rendered as HTML<br />
 * Web-based terminals via [xtermjs](https://github.com/xtermjs/xterm.js/) component<br />
-  See section on [WebTerminal](#WebTerminal)
+  See section on [WebTerminal](#webterminal)
 * Local Webterminal websocket is also available
-  * Utilizes [spyder-terminal](https://github.com/spyder-ide/spyder-terminal) component
-  * You can practice the lesson material with your own OS/system
-    * Simply **click** on a command, and it will be executed in the underlying shell via web terminal!
-    * Default shell is bash (for now)
+    * Utilizes [spyder-terminal](https://github.com/spyder-ide/spyder-terminal) component
+    * You can practice the lesson material with your own OS/system
+        * Simply **click** on a command, and it will be executed in the underlying shell via web terminal!
+        * Default shell is bash (for now)
 
 <a name="quick-start"></a>
 # Quick Start
@@ -101,20 +117,22 @@ pip install .
   and [parcel](https://parceljs.org/) for the web build.
   * [.nvmrc](.nvmrc) is set to use node v16.5.0
   * To install from the locally cloned repo in development mode, do the same as above, but with `pip install -e .` instead
-* You can install the pip package directly from git repo `pip install git+http://www.github.com/berttejeda/bert.dashboard.git`,<br />
+* You can also install the pip package directly from git repo `pip install git+http://www.github.com/berttejeda/bert.dashboard.git`,<br />
   but you'll need to obtain the HTML assets and point the app to them, see the [Appendix](#appendix)
 
 <a name="step-2---create-your-configuration-file"></a>
-## Step 2 - Create your configuration file
+## Step 2 - Adjust your configuration files as needed
 
-Using the provided sample config [lessons.yaml.example](lessons.yaml.example),
-you can create your own default configuration file, ensuring the following:
-- If no config name is explicitly specified:
-    - The file name should be _lessons.yaml_
-    - The file should be located in one of the app's search paths,<br />
-      see the section on [Configuration File](#configuration-file)
-- To specify a config file explicitly from the cli you can use either of `--config-file` or `-f` flag, as with `btdashboard -f path/to/your/config.yaml`
-- HTTP(S) web paths are also valid, as with `btdashboard -f http://some.website.com/path/to/your/config.yaml`  
+Under the [etc](etc) directory, you'll find the following configuration files:
+
+- [app.yaml](etc/app.yaml)
+- [dashboard.yaml](etc/dashboard.yaml)
+- [lessons.yaml](etc/lessons.yaml)
+- [sidebar.yaml](etc/sidebar.yaml)
+
+If not specified, the app will use the configuration files above.
+
+TODO: Documentation on configuration file options.
 
 <a name="step-3---launch"></a>
 ## Step 3 - Launch!
@@ -130,13 +148,15 @@ Usage information can be obtained by invoking the executable with the `--help` f
 The help output should be similar to:
 
 ```
-usage: btdashboard
-              [-h] [--username USERNAME] [--password PASSWORD]
+usage: btdashboard [-h] [--username USERNAME] [--password PASSWORD]
               [--lesson-url LESSON_URL]
-              [--static-assets-folder STATIC_ASSETS_FOLDER]
-              [--config-file CONFIG_FILE] [--cors-origin CORS_ORIGIN]
-              [--logfile-path LOGFILE_PATH] [--host-address HOST_ADDRESS]
-              [--port PORT]
+              [--static-assets-folder STATIC_ASSETS_FOLDER] [--app-id APP_ID]
+              [--app-user APP_USER] [--app-config-file APP_CONFIG_FILE]
+              [--lessons-config-file LESSONS_CONFIG_FILE]
+              [--dashboard-config-file DASHBOARD_CONFIG_FILE]
+              [--sidebar-config-file SIDEBAR_CONFIG_FILE]
+              [--cors-origin CORS_ORIGIN] [--logfile-path LOGFILE_PATH]
+              [--host-address HOST_ADDRESS] [--port PORT]
               [--webterminal-listen-host WEBTERMINAL_LISTEN_HOST]
               [--webterminal-listen-port WEBTERMINAL_LISTEN_PORT]
               [--webterminal-host WEBTERMINAL_HOST]
@@ -144,8 +164,9 @@ usage: btdashboard
               [--webterminal-shell-command WEBTERMINAL_SHELL_COMMAND]
               [--open-browser-delay OPEN_BROWSER_DELAY]
               [--logfile-write-mode {a,w}] [--config-file-templatized]
-              [--api-only] [--webterminal-only] [--all-in-one] [--debug]
-              [--no-verify-tls] [--no-render-markdown]
+              [--api-only] [--webterminal-only] [--all-in-one] [--no-browser]
+              [--debug] [--no-verify-tls] [--no-render-markdown]
+              [run]
 
 Bert's Dashboard
 
@@ -162,8 +183,18 @@ optional arguments:
                         The URL for the lesson definition
   --static-assets-folder STATIC_ASSETS_FOLDER, -S STATIC_ASSETS_FOLDER
                         Explicity specify the folder for static HTML assets
-  --config-file CONFIG_FILE, -f CONFIG_FILE
+  --app-id APP_ID, -id APP_ID
+                        Specify the App's Identifier
+  --app-user APP_USER, -iu APP_USER
+                        Specify the App's User
+  --app-config-file APP_CONFIG_FILE, -cfa APP_CONFIG_FILE
                         Path to app configuration file
+  --lessons-config-file LESSONS_CONFIG_FILE, -cfl LESSONS_CONFIG_FILE
+                        Path to lessons configuration file
+  --dashboard-config-file DASHBOARD_CONFIG_FILE, -cfd DASHBOARD_CONFIG_FILE
+                        Path to dashboard configuration file
+  --sidebar-config-file SIDEBAR_CONFIG_FILE, -cfs SIDEBAR_CONFIG_FILE
+                        Path to sidebar configuration file
   --cors-origin CORS_ORIGIN, -o CORS_ORIGIN
                         Override CORS origin pattern
   --logfile-path LOGFILE_PATH, -L LOGFILE_PATH
@@ -197,6 +228,8 @@ optional arguments:
   --webterminal-only    Don't serve static assets or start API, only invoke
                         Webterminal Websocket
   --all-in-one, -aio    Run the shell websocket process alongside app
+  --no-browser, -nobrowser
+                        If applicable, don't open the web browser
   --debug
   --no-verify-tls, -notls
                         Verify SSL cert when downloading web content
@@ -207,7 +240,7 @@ optional arguments:
 # Starting the development instance of the app
 
 * Install Python 3.7+
-* Install this project's required version of [nodejs](https://nodejs.org/en/) (v16.5.0): `nvm install`<br />
+* Install this project's required version of [nodejs](https://nodejs.org/en/) (v18.11.0): `nvm install`<br />
   Note that this command implicitly reads the local [.nvmrc](.nvmrc)
 * Install yarn & parcel: `npm install -g yarn parcel`
 * Install node modules: `yarn install --frozen-lockfile`
@@ -230,28 +263,8 @@ This functionality helps increase UI development velocity.
 I have not yet implemented similar functionality for the API files under [btdashboard](btdashboard),
 so you'll have to kill and reload the API whenever you make changes.
 
-<a name="configuration-file"></a>
-# Configuration File
-
-The configuration file is read by the Flask API process, 
-and is a YAML-formatted file.
-
-As mentioned above, a sample configuration file is provided: 
-[lessons.yaml.example](lessons.yaml.example)
-
-If no configuration is specified via the cli, 
-the web app will attempt to find the config file in the 
-following locations:
-
-- Under ~/lessons.yaml
-- Adjacent to the app, i.e. ./lessons.yaml
-- Under ~/.btdashboard/lessons.yaml
-- Under /etc/lessons.yaml
-
-Do review the comments in the sample file, as these explain how the sections are interpreted/handled by the UI.
-
-<a name="configuration-file---defaults"></a>
-## Configuration File - Defaults
+<a name="app-defaults"></a>
+# App Defaults
 
 If no settings can be found, the app will resort to its defaults, 
 see [defaults.py](btdashboard/defaults.py) 
@@ -268,12 +281,11 @@ As already mentioned, lessons are Markdown-formatted
 files interpreted as [jinja](https://jinja.palletsprojects.com/en/3.0.x/) 
 templates.
 
-You can define a lesson catalog in the 
-[configuration file](lessons.yaml.example).
+These are defined in the [lessons.yaml](etc/lessons.yaml) configuration file.
 
-If these files are stored in a password-protected web location, 
-you'll need to specify credentials via the cli with `--username` and `--password`<br />
-or via environmental variables `GLOBAL_USERNAME` and `GLOBAL_PASSWORD`
+You can override the location of this file via the appropriate cli parameter.
+
+Review the `--help` output for details.
 
 ## TODO 
 
@@ -311,23 +323,24 @@ terminals is [xterm.js](https://github.com/xtermjs/xterm.js/).
 As such, the xterm.js component requires a websocket to a bash process.
 
 By [default](btdashboard/defaults.py), the bert.dashboard web app 
-will attempt to connect to a local instance of the websocket via _http://127.0.0.1:10000/_.
+will attempt to connect to a local instance of the websocket via _http://127.0.0.1:10001/_.
 
 You can get this websocket running either by:
 
 - Installing btdashboard with `pip install btdashboard` and running `btdashboard -aio` or by installing all requirements and running `python btdashboard/app.py -aio`<br />
   Doing so will launch a local websocket that forwards keystrokes to a bash process on your system
-- Running the pre-built docker image: `docker run -it --name webterminal --rm -p 10001:10001 berttejeda/btdashboard-webterminal`
-
-Either of the commands above will start the websocket 
-and bash process on localhost:10001.
-
-Feel free to adjust either approach to your need.
-
-Read more [bert.dashboard.webterminal github project](https://github.com/berttejeda/bert.dashboard.webterminal)
 
 <a name="appendix"></a>
 # Appendix
+
+<a name="configuration-files"></a>
+## Configuration files
+
+Important note about the configuration files:
+
+- Environment variable interpolation is supported, e.g.<br />
+  `user: ${USER}`, <br />
+  You can see this in use in the [app](etc/app.yaml) config file
 
 <a name="github-pages"></a>
 ## Github Pages

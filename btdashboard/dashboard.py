@@ -47,7 +47,8 @@ class Dashboard():
                 command = data_exec.command
                 command_args = ' '.join(data_exec.args)
                 exec_command = f"{command} {command_args}"
-                exec_result = run(['/bin/bash', '-c', exec_command], capture_output=True, universal_newlines=True, text=True)
+                shell_command = data_exec.get('shell', ['/bin/bash', '-c'])
+                exec_result = run([*shell_command, exec_command], capture_output=True, universal_newlines=True, text=True)
                 exec_result_decoded = '{"error": "Data failed decoding"}'
                 logger.info(f'Decoding dashboard data for {ck}')
                 exec_result_to_decode = exec_result.stdout
@@ -57,6 +58,7 @@ class Dashboard():
                     exec_result_decoded = base64.b64decode(exec_result_to_decode)
                   except Exception as e:
                     try:
+                      logger.warning(f'Fixed base64 padding {ck} data result')
                       exec_result_decoded = base64.b64decode(exec_result_to_decode + '===').decode("utf-8", "ignore")
                     except Exception as e:
                       decode_err = str(e)

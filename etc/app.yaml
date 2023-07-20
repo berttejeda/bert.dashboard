@@ -1,6 +1,6 @@
 ---
 id: btDashboard
-user: ${USER:anonymous}
+user: ${USER}
 terminals:
   default:
     address: ws://127.0.0.1:10001

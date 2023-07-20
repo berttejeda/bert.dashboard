@@ -77,7 +77,6 @@ Here's a screenshot of an interactive lesson:
 
 ![lesson](res/lesson.gif)
 
-
 <a name="features"></a>
 # Features
 

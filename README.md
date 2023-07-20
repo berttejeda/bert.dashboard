@@ -73,6 +73,10 @@ Here's a screenshot of the Knowledgebase layout:
 
 ![knowledgebase](res/knowledgebase.png)
 
+Here's a screenshot of an interactive lesson:
+
+![lesson](res/lesson.gif)
+
 
 <a name="features"></a>
 # Features

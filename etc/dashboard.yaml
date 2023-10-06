@@ -1,20 +1,88 @@
 dashboard:
   greeting: |-
     Here is what's in focus today:
-  # cards:
-  #   recent_activity:
-  #     title: "Latest Market News"
-  #     type: message.container
-  #     data:
-  #       exec:
-  #           # ecli message.container.init
-  #         command: |-
-  #           python /Users/etejeda/git/self/bert.dashboard.plugins/message/container/init.py
-  #         args:
-  #           - testing
-
+  requirements:
+    - ecli:
+        install: pip install btecli
+      help:
+        ecli plugins.install -r https://github.com/berttejeda/bert.dashboard.plugins.git
+  processing:
+    backoff:
+      sleep_time: 2
+      num_retries: 4
+    throttle: 5
+  cards:
+    tsla_market_news:
+      title: "Latest Stock Market News for TSLA"
+      type: news.stocks
+      data:
+        exec:
+          command: |-
+            ecli news.stocks.fetch
+          args:
+            - --symbols tsla
+            - --start 1d
+            - --limit 10
+        schema:
+          validations:
+              # Object should be a dictionary
+              # whose keys evaluate to a
+              # nested list of strings
+            - '{str: [[str]]}'
+    jbht_market_news:
+      title: "Latest Stock Market News for J.B. Hunt"
+      type: news.stocks
+      data:
+        exec:
+          command: |-
+            ecli news.stocks.fetch
+          args:
+            - --symbols jbht
+            - --start 1d
+            - --limit 10
+        schema:
+          validations:
+              # Object should be a dictionary
+              # whose keys evaluate to a
+              # nested list of strings
+            - '{str: [[str]]}'
+    nvidia_market_news:
+      title: "Latest Stock Market News for Nvdia"
+      type: news.stocks
+      data:
+        exec:
+          command: |-
+            ecli news.stocks.fetch
+          args:
+            - --symbols nvda
+            - --start 1d
+            - --limit 10
+        schema:
+          validations:
+              # Object should be a dictionary
+              # whose keys evaluate to a
+              # nested list of strings
+            - '{str: [[str]]}'
+    ibkr_market_news:
+      title: "Latest Stock Market News for Interactive Brokers"
+      type: news.stocks
+      data:
+        exec:
+          command: |-
+            ecli news.stocks.fetch
+          args:
+            - --symbols ibkr
+            - --start 1d
+            - --limit 10
+        schema:
+          validations:
+              # Object should be a dictionary
+              # whose keys evaluate to a
+              # nested list of strings
+            - '{str: [[str]]}'
 types:
-  - message.container
+  - news.stocks
+  - messages.generic
   - chart.bar
   - chart.line
   - chart.area

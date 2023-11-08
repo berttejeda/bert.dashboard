@@ -1,4 +1,5 @@
 __pycache__
+.bash_history
 .idea
 .DS_Store
 .env

@@ -137,7 +137,7 @@ function build() {
   echo "Building Release ..."
 
   yes | pyinstaller -i src/assets/logo_setup.ico \
-  --add-data 'dashboard.gui;dashboard.gui' \
+  --add-data 'btdashboard.gui;btdashboard.gui' \
   -n btdashboard \
   --hidden-import clr \
   --onedir btdashboard/app.py

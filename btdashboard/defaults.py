@@ -19,7 +19,7 @@ default_webterminal_env = {
 }
 
 # Flask app settings
-gui_dirname = 'dashboard.gui'
+gui_dirname = 'btdashboard.gui'
 default_app_name = "Bert's Dashboard"
 default_app_port = 10000
 default_open_browser_delay = 1.25

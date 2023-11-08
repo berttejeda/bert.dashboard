@@ -5,7 +5,7 @@ import sysconfig
 import sys
 
 etc_dirname = 'etc'
-gui_dirname = 'dashboard.gui'
+gui_dirname = 'btdashboard.gui'
 
 cfg = ConfigParser.ConfigParser()
 cfg.read('setup.cfg')

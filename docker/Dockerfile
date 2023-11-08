@@ -32,7 +32,7 @@ WORKDIR /setup
 
 ADD . .
 
-COPY --from=assets /setup/dashboard.gui ./
+COPY --from=assets /setup/btdashboard.gui ./
 
 RUN sudo pip install .
 

@@ -224,6 +224,8 @@ def main():
     else:
         app_config = default_app_config
 
+    app_config_data = json.dumps(app_config)
+
     if args.webterminal_only:
       start_webterminal()
     elif args.all_in_one:
@@ -231,7 +233,7 @@ def main():
       if hasattr(os, 'getppid'):  # only available on Unix
           logger.info(f'parent process: {os.getppid()}')
       logger.info('========================================')
-      proc_api = mp.Process(target=start_api, args=(json.dumps(app_config),))
+      proc_api = mp.Process(target=start_api, args=(app_config_data,))
       proc_api.deamon = True
       proc_api.start()
 
@@ -243,7 +245,7 @@ def main():
       proc_webterminal.join()
 
     else:
-        start_api()
+        start_api(app_config_data)
                 
 if __name__ == '__main__':
   main()

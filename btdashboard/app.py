@@ -261,7 +261,7 @@ def main():
       proc_webterminal.join()
 
     else:
-        start_api(app_config_data)
+        start_api(app_config_data, asset_search_paths)
 
 if __name__ == '__main__':
   main()

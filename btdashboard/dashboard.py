@@ -1,7 +1,8 @@
 import base64
 import json
+import os
 from btdashboard.config import AppConfig
-from btdashboard.defaults import default_dashboard_config_file
+from btdashboard.defaults import default_dashboard_config_file_name
 from btdashboard.defaults import default_dashboard_throttle
 from btdashboard.defaults import default_dashboard_backoff_num_retries
 from btdashboard.defaults import default_dashboard_backoff_sleep_time
@@ -10,7 +11,6 @@ from btdashboard.logger import Logger
 from schema import Schema, SchemaError
 from subprocess import run
 from time import sleep
-import math
 
 logger = Logger().init_logger(__name__)
 
@@ -18,10 +18,18 @@ class Dashboard():
 
   def __init__(self, **kwargs):
     args = kwargs['args']
+    config_search_paths = kwargs['config_search_paths']
     verify_tls = args.no_verify_tls or default_verify_tls
+    if args.dashboard_config_file:
+      dashboard_config_file = args.dashboard_config_file
+    else:
+      dashboard_config_file = AppConfig.get_config_path(
+        config_search_paths,
+        default_dashboard_config_file_name
+      )
     dashboard_config = AppConfig().initialize(
     args=vars(args),
-    config_file=args.dashboard_config_file or default_dashboard_config_file,
+    config_file=dashboard_config_file,
     verify_tls=verify_tls
     )
     self.settings = dashboard_config

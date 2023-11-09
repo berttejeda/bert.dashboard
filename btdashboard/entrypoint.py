@@ -1,5 +1,5 @@
 from btdashboard.logger import Logger
-from btdashboard.defaults import gui_dirname
+
 import os
 import sys
 
@@ -76,7 +76,7 @@ def do_if_not_frozen():
   except Exception as e:
     logger.debug(f'pip package does not exist: {e}')
     pass
-  static_folder_search_paths = [
+  asset_paths = [
       os.getcwd(),
       os.path.realpath(os.path.expanduser('~')),
       os.path.join(os.path.abspath(os.sep), 'etc'),
@@ -86,30 +86,30 @@ def do_if_not_frozen():
       os.path.abspath(os.path.join(package_path, os.pardir, 'Scripts')),
       os.path.abspath(os.path.join(project_root, os.pardir))
   ] + [p[1] for p in sysconfig.get_paths().items()]
-  static_folder_paths = [
-      os.path.expanduser(os.path.join(p, gui_dirname))
-      for p in static_folder_search_paths
-  ]
-  static_folder_found = False
-  for static_folder_path in static_folder_paths:
-      logger.debug(f'Checking {static_folder_path}')
-      if os.path.exists(static_folder_path):
-          logger.info(f'Found {static_folder_path}')
-          return static_folder_path
-  if not static_folder_found:
-    logger.error(f'Could not find static assets folder in any of the expected locations')
-    return None
+  return asset_paths
 
-def get_static_folder():
-  logger.info('Determining path to static assets')
+def get_asset_search_paths():
+  logger.info('Determining search paths to application assets')
   logger.debug(f'Is Frozen?: {is_frozen}')
   logger.debug(f'Detected file name: {my_file_name}')
   logger.debug(f'Detected project root: {project_root}')
+  asset_search_paths = []
   if is_frozen: # Check for frozen pyinstaller app
-    static_folder = do_if_frozen()
+    asset_search_paths = do_if_frozen()
   else: # Check for unfrozen development app
-    static_folder = do_if_not_frozen()
-  if static_folder:
-    return static_folder
-  else:
-    raise Exception('No folder found for static assets')
+    asset_search_paths = do_if_not_frozen()
+  return asset_search_paths
+
+# def get_dashboard_config_path():
+#   logger.info('Determining path to dashboard config')
+#   logger.debug(f'Is Frozen?: {is_frozen}')
+#   logger.debug(f'Detected file name: {my_file_name}')
+#   logger.debug(f'Detected project root: {project_root}')
+#   if is_frozen: # Check for frozen pyinstaller app
+#     dashboard_config_path = do_if_frozen()
+#   else: # Check for unfrozen development app
+#     dashboard_config_path = do_if_not_frozen()
+#   if dashboard_config_path:
+#     return dashboard_config_path
+#   else:
+#     raise Exception('No config file found for dashboard settings')

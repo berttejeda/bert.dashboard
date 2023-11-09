@@ -17,14 +17,15 @@ from btdashboard.args import parse_args
 from btdashboard.config import AppConfig
 from btdashboard.defaults import default_app_port, \
 default_app_config, \
-default_app_config_file, \
+default_app_config_file_name, \
 default_app_host_address, \
 default_footer_websocket_address, \
 default_webterminal_listen_host , \
 default_webterminal_listen_port, \
 default_rightpane_websocket_address, \
 default_verify_tls
-from btdashboard.entrypoint import get_static_folder
+from btdashboard.entrypoint import get_asset_search_paths
+from btdashboard.static import get_static_folder_path
 from btdashboard.logger import Logger
 from btdashboard.dashboard import Dashboard
 from btdashboard.sidebar import SideBar
@@ -60,20 +61,23 @@ def start_webterminal(app_config_input):
   webterminal_listen_port = args.webterminal_listen_port or default_webterminal_listen_port
   WebTerminal(app_config, args).start(host=webterminal_listen_host , port=webterminal_listen_port)
 
-def start_api(app_config_input):
-  """API functions.
+def start_api(app_config_input, asset_search_paths):
+  """
+
+  API functions
   
   This function defines the API routes and starts the API Process.
 
   """
   app_config = AttrDict(json.loads(app_config_input))
+
   # Initialize Lessons
-  lessons = Lessons(args=args)
+  lessons = Lessons(args=args, config_search_paths=asset_search_paths)
 
   if args.api_only:
       static_assets_folder = None
   else:
-      static_assets_folder = args.static_assets_folder or get_static_folder()
+      static_assets_folder = args.static_assets_folder or get_static_folder_path(asset_search_paths)
       logger.info(f'Static assets folder is {static_assets_folder}')
 
   # Initialize Topics
@@ -82,10 +86,10 @@ def start_api(app_config_input):
       args=args)
 
   # Initialize Dashboard
-  dashboard = Dashboard(args=args)
+  dashboard = Dashboard(args=args, config_search_paths=asset_search_paths)
 
   # Initialize Sidebar
-  sidebar = SideBar(args=args)
+  sidebar = SideBar(args=args, config_search_paths=asset_search_paths)
 
   # Initialize Websocket handler
   websocket = WebSocket()
@@ -155,7 +159,7 @@ def start_api(app_config_input):
       return {}
     else:
       resp = make_response("Failed to resize terminal", 500)
-      return resp      
+      return resp
 
   @app.route('/api/getFooterWebSocketAddress')
   def get_footer_websocket_address():
@@ -213,8 +217,19 @@ def main():
     """
     verify_tls = args.no_verify_tls or default_verify_tls
 
+    # Get asset search paths
+    asset_search_paths = get_asset_search_paths()
+
     # Initialize App Configuration
-    app_config_file = args.app_config_file or default_app_config_file
+
+    if args.app_config_file:
+      app_config_file = args.app_config_file
+    else:
+      app_config_file = AppConfig.get_config_path(
+        asset_search_paths,
+        default_app_config_file_name
+      )
+
     if app_config_file:
         app_config = AppConfig().initialize(
             args=vars(args),
@@ -233,7 +248,8 @@ def main():
       if hasattr(os, 'getppid'):  # only available on Unix
           logger.info(f'parent process: {os.getppid()}')
       logger.info('========================================')
-      proc_api = mp.Process(target=start_api, args=(app_config_data,))
+
+      proc_api = mp.Process(target=start_api, args=(app_config_data,asset_search_paths))
       proc_api.deamon = True
       proc_api.start()
 
@@ -246,7 +262,7 @@ def main():
 
     else:
         start_api(app_config_data)
-                
+
 if __name__ == '__main__':
   main()
 

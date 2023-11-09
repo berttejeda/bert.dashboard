@@ -4,7 +4,8 @@ import os
 import re
 import markdown
 from btdashboard.config import AppConfig
-from btdashboard.defaults import default_verify_tls, default_lessons_config_file
+from btdashboard.defaults import default_verify_tls
+from btdashboard.defaults import default_lessons_config_file_name
 from btdashboard.extensions import NewTabExtension
 from jinja2 import Template
 from btdashboard.logger import Logger
@@ -18,11 +19,21 @@ class Lessons:
   def __init__(self, **kwargs):
 
     args = kwargs['args']
+    config_search_paths = kwargs['config_search_paths']
     no_render_markdown = args.no_render_markdown
     verify_tls = args.no_verify_tls or default_verify_tls
+
+    if args.lessons_config_file:
+      lessons_config_file = args.lessons_config_file
+    else:
+      lessons_config_file = AppConfig.get_config_path(
+        config_search_paths,
+        default_lessons_config_file_name
+      )
+    
     lessons_config = AppConfig().initialize(
     args=vars(args),
-    config_file=args.lessons_config_file or default_lessons_config_file,
+    config_file=lessons_config_file,
     verify_tls=verify_tls
     )
     self.settings = lessons_config
